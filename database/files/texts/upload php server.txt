@@ -1,0 +1,8 @@
+
+php
+ 
+php -S  127.0.0.1:4444 -t /sdcard/ls
+
+python
+
+python3 -m http.server --bind 127.0.0.1 8080

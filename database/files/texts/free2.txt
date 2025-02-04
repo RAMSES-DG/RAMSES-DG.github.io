@@ -1,0 +1,12 @@
+https://flathub.org/apps/fr.natron.Natron
+
+----
+
+natron vfx ( 200 + 300 + 500 ) mgb -- by command "flatpak install flathub fr.natron.Natron " run by cmd "flatpak run fr.natron.Natron"
+
+----
+
+boris * fx - (search)
+black magic solution  fx 
+
+----

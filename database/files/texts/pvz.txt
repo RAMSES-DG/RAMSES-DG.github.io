@@ -1,0 +1,10 @@
+Codes
+Type these during gameplay
+
+pinata - a shower of candy when a zombie dies
+trickedout - Alternate Lawn Mower appearance
+future - Gives zombies futuristic shades
+dance - Makes the zombies dance
+sukhbir - toggles the zombie's call for brains-sound
+daisies - Zombies leave small daisies behind when killed
+Mustache - Zombies Now Have Mustaches

@@ -1,0 +1,321 @@
+<html lang="ar">
+
+<head>
+        <meta charset="UTF-8" />
+        <link rel="stylesheet" type="text/css" href="table.css" />
+    <style>
+    #searchBox, #filterBox {
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+    }
+    </style>
+        <h2>مواقع الويب المظلم</h2>
+        <h3>Dark web Links</h3>
+</head>
+
+<body>
+<!-- مربع الإدخال المتقدم -->
+&emsp;&emsp;&emsp;&emsp;<input type="text" id="filterBox" placeholder="ابحث هنا" oninput="filterFunction()">
+
+<script>
+function searchFunction() {
+    var input, filter, content, tr, i, txtValue;
+    input = document.getElementById('searchBox');
+    filter = input.value.toUpperCase();
+    content = document.getElementsByTagName('*');
+
+    for (i = 0; i < content.length; i++) {
+        var tagName = content[i].tagName.toUpperCase();
+        if (tagName !== 'thead' && tagName !== 'H3' && tagName !== 'H3') {
+            txtValue = content[i].textContent || content[i].innerText;
+
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                content[i].style.display = '';
+            } else {
+                content[i].style.display = 'none';
+            }
+        }
+    }
+}
+
+function filterFunction() {
+    var input, filter, content, tr, i;
+    input = document.getElementById('filterBox');
+    filter = input.value.toUpperCase();
+    content = document.getElementsByTagName('tr');
+
+    for (i = 0; i < content.length; i++) {
+        tr = content[i];
+        if (tr.innerText.toUpperCase().indexOf(filter) > -1) {
+            content[i].style.display = '';
+        } else {
+            content[i].style.display = 'none';
+        }
+    }
+}
+</script>
+
+<!-- onclick fullscreen -->
+<script>
+	// عند النقر على الصفحة
+	document.onclick = function() {
+	  openFullscreen();
+	};
+	
+	function openFullscreen() {
+	  if (document.documentElement.requestFullscreen) {
+		document.documentElement.requestFullscreen();
+	  } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+		document.documentElement.mozRequestFullScreen();
+	  } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+		document.documentElement.webkitRequestFullscreen();
+	  } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+		document.documentElement.msRequestFullscreen();
+	  }
+	}
+	</script>
+
+<!-- المحتوى الذي يمكن البحث فيه -->
+
+<div class="table-wrapper">
+    <table class="fl-table">
+        <tbody>
+            <tr>
+                <td>piratebay</td>
+                <td>piratebayo3klnzokct3wt5yyxb2vpebbuyjl7m623iaxmqhsd52coid.onion</td>
+                <td>torrent</td>
+            </tr>
+            <tr>
+                <td>protonmail</td>
+                <td>protonmailrmez3lotccipshtkleegetolb73fuirgj7r4o4vfu7ozyd.onion</td>
+                <td>mail</td>
+            </tr>
+            <tr>
+                <td>torch</td>
+                <td>torchdeedp3i2jigzjdmfpn5ttjhthh5wbmda2rr3jvqjg5p77c54dqd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>trust wiki</td>
+                <td>wiki6dtqpuvwtc5hopuj33eeavwa6sik7sy57cor35chkx5nrbmmolqd.onion</td>
+                <td>wiki</td>
+            </tr>
+            <tr>
+                <td>kun</td>
+                <td>w7m432cocr665kf5tlpcxojwldajr3njd2etcxwhpbrt44eemuxhp7ad.onion</td>
+                <td>social media</td>
+            </tr>
+            <tr>
+                <td>propublica</td>
+                <td>lvtu6mh6dd6ynqcxtd2mseqfkm7g2iuxvjobbyzpgx2jt427zvd7n3ad.onion</td>
+                <td>social media</td>
+            </tr>
+            <tr>
+                <td>secure drop</td>
+                <td>sdolvtfhatvsysc6l34d65ymdwxcujausv7k5jk4cy5ttzhjoi6fzvyd.onion</td>
+                <td>social media</td>
+            </tr>
+            <tr>
+                <td>cia</td>
+                <td>ciadotgov4sjwlzihbbgxnqg3xiyrg7so2r2o3lt5wz5ypk4sxyjstad.onion</td>
+                <td>other</td>
+            </tr>
+            <tr>
+                <td>hackers team</td>
+                <td>duawf4muvwftwzadofnmojptq7hs3unlnvgw5xttwkcxojmxvhxtzxad.onion</td>
+                <td>hack</td>
+            </tr>
+            <tr>
+                <td>grams</td>
+                <td>grams4onnyb67i3v4hl7l6ri5lwgmu2z2om3xtromrhlszcsaydbfcqd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>zzzchan</td>
+                <td>crghlabr45r5pqkgnbgehywk5nxutdks5iss7tabyux5psikqqjirryd.onion/index.html</td>
+                <td>wiki</td>
+            </tr>
+            <tr>
+                <td>bellingcat</td>
+                <td>www.bellcatmbguthn3age23lrbseln2lryzv3mt7whis7ktjw4qrestbzad.onion</td>
+                <td>news</td>
+            </tr>
+            <tr>
+                <td>invidious</td>
+                <td>grwp24hodrefzvjjuccrkw3mjq4tzhaaq32amf33dzpmuxe7ilepcmad.onion</td>
+                <td>social media</td>
+            </tr>
+            <tr>
+                <td>zlibrary</td>
+                <td>bookszlibb74ugqojhzhg2a63w5i2atv5bqarulgczawnbmsb6s6qead.onion</td>
+                <td>library</td>
+            </tr>
+            <tr>
+                <td>ahmia</td>
+                <td>juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>hidden message</td>
+                <td>ouowjgurirebln6vir2qtgpemtd2z4gmvu4xglhi3rky2fr72htl64ad.onion</td>
+                <td>other</td>
+            </tr>
+            <tr>
+                <td>hidden answers</td>
+                <td>hiddenarwchf2imvesjre2lfoc5a74ruls6eqiuyvrkll74axztiobqd.onion</td>
+                <td>social media</td>
+            </tr>
+            <tr>
+                <td>excavator</td>
+                <td>2fd6cemt4gmccflhm6imvdfvli3nf7zn6rfrwpsy7uhxrgbypvwf5fad.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>tasty onions</td>
+                <td>tastr5kwcabstvuw5flgc4ij6itln65gtmhows4uu2dbabcbtuhv5tqd.onion</td>
+                <td>links</td>
+            </tr>
+            <tr>
+                <td>dark web sites links</td>
+                <td>darkwebentyk2elhhh6okholnrookap7zfbun2is7ouspzxcpkqjxxad.onion</td>
+                <td>links</td>
+            </tr>
+            <tr>
+                <td>ahmia</td>
+                <td>juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>torch</td>
+                <td>xmh57jrknzkhv6y3ls3ubitzfqnkrwxhopf5aygthi7d6rplyvk3noyd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>onionLand</td>
+                <td>3bbad7fauom4d6sgppalyqddsqbf5u5p56b5k5uk2zxsy3d6ey2jobad.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>tordex</td>
+                <td>tordexu73joywapk2txdr54jed4imqledpcvcuf75qsas2gwdgksvnyd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>tor66</td>
+                <td>tor66sewebgixwhcqfnp5inzp5x5uohhdy3kvtnyfxc2e5mxiuh34iid.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>venus</td>
+                <td>venusoseaqnafjvzfmrcpcq6g47rhd7sa6nmzvaa4bj5rp6nm5jl7gad.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>hidden answers</td>
+                <td>fnpctr35hk66vmo4skablcyni7nfoe5xpjwqs7knv3xnmwl4huha76id.onion</td>
+                <td>social media</td>
+            </tr>
+            <tr>
+                <td>torgle</td>
+                <td>iy3544gmoeclh5de6gez2256v6pjh4omhpqdh2wpeeppjtvqmjhkfwad.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>hoodle</td>
+                <td>nr2dvqdot7yw6b5poyjb7tzot7fjrrweb2fhugvytbbio7ijkrvicuid.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>general wiki</td>
+                <td>gtl3bpvdnzijqmna2sd25ktixabzt7pval6fpkd2ur6vpov52zzv74yd.onion</td>
+                <td>links</td>
+            </tr>
+            <tr>
+                <td>tor search engine</td>
+                <td>searchesqafmar2ocusr443hnolhmrxek5xu3hrw3wliwlzmdywvjtqd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>alrood</td>
+                <td>dqhlysycv2uv2h3fay3cpopxuug6fxyp2reykt7lg67hnuonhm4iveqd.onion</td>
+                <td>arabic</td>
+            </tr>
+            <tr>
+                <td>kraken</td>
+                <td>krakenai2gmgwwqyo7bcklv2lzcvhe7cxzzva2xpygyax5f33oqnxpad.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>OurRealm</td>
+                <td>orealmvxooetglfeguv2vp65a3rig2baq2ljc7jxxs4hsqsrcemkxcad.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>sentor</td>
+                <td>e27slbec2ykiyo26gfuovaehuzsydffbit5nlxid53kigw3pvz6uosqd.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>moslimoun</td>
+                <td>ggjvmjhcgtcnel3n3ddjcwhdx5yzbfab24pcjll7ef4gfysdjgjdlnid.onion</td>
+                <td>arabic</td>
+            </tr>
+            <tr>
+                <td>bobby</td>
+                <td>bobby64o755x3gsuznts6hf6agxqjcz5bop6hs7ejorekbm7omes34ad.onion</td>
+                <td>search engine</td>
+            </tr>
+            <tr>
+                <td>reddit</td>
+                <td>qwikxx4xqvhdyyazkrw7pwdpdppfnmn7j2n6cvq5zecm4atbppaslzad.onion</td>
+                <td>social media</td>
+            </tr>
+            <tr>
+                <td>hd wiki</td>
+                <td>lf3xpbdplryxiev34voxh72bj2kqztsz2jzepuh7l2wk5th5fcvloxyd.onion</td>
+                <td>links</td>
+            </tr>
+            <tr>
+                <td>hack town</td>
+                <td>hacktowns3sba2xavxecm23aoocvzciaxirh3vekg2ovzdjgjxedfvqd.onion</td>
+                <td>hack</td>
+            </tr>
+            <tr>
+                <td>black hat</td>
+                <td>blkhatjxlrvc5aevqzz5t6kxldayog6jlx5h7glnu44euzongl4fh5ad.onion</td>
+                <td>chat</td>
+            </tr>
+            <tr>
+                <td>onion dir</td>
+                <td>oniodtu6xudkiblcijrwwkduu2tdle3rav7nlszrjhrxpjtkg4brmgqd.onion</td>
+                <td>links</td>
+            </tr>
+            <tr>
+                <td>btdig</td>
+                <td>btdigggink2pdqzqrik3blmqemsbntpzwxottujilcdjfz56jumzfsyd.onion</td>
+                <td>torrent</td>
+            </tr>
+            <tr>
+                <td>Choose Better</td>
+                <td>ujuwmruwekgs7ekzlpzrmvkgj7bmsykrcqbmhup3hinpm7lhl2howbqd.onion</td>
+                <td>links</td>
+            </tr>
+            <tr>
+                <td>top onion sites</td>
+                <td>deepwebyl3au3fnm4efynncy5fhiqknam3op6q3qgdwu3n5oavofifqd.onion</td>
+                <td>links</td>
+            </tr>
+            <tr>
+                <td>Content 10</td>
+                <td>Content 10</td>
+                <td>Content 10</td>
+            </tr>
+        <tbody>
+    </table>
+</div>
+
+    </body>
+</html>

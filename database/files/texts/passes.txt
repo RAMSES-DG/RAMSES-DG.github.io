@@ -1,0 +1,19 @@
+
+  address          	  :     user          |         pass          |  type
+
+microdgf@outlook.sa       :                   |  MICR0DGF         : google
+alshamidgf@gmail.com      :                   |  SH4MI_dgf4       : google
+leadertenebris@gmail.com  :                   |  L34D3RDGF        : google
+              				      |  000WEBHOST_pwd   : 000webhost
+superrdgf@gmail.com       :                      SUP34dgf         : google
+threehdgf@gmail.com       :                   |  THREEHDGF        : google
+                                                 GITHUB4pwd       : github
+dataxtenebris@gmail.com   :                   |  DAT4Xdgf         : google
+any-science-team          :                   |  ANY-SC-TE4M-dgf  : protonmail
+ramseeyou@protonmail.com  :                   |  R4MS33UDGF       : protonmail
+egyram@proton.me          :                   |  ramses-dgf       : protonmail
+				ssafer        |  K4IT-dgf         : facebook       
+ 				khanzour      |  K4IT2-dgf        : facebook
+
+
+

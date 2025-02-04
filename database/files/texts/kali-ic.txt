@@ -1,0 +1,22 @@
+
+
+"python upload  -  python3 -m http.server --bind 127.0.0.1 4444"
+
+"php server upload  -  php -S 127.0.0.1:4444 -t /root"
+
+.deb files open by  -  "dpkg -i "
+
+.tar.gz .xz    -  extract it
+
+root terminal command -  sudo exo-open --launch TerminalEmulator
+
+           kali linux /sda8   -   windows 10 / sda1
+-------------
+    grub 
+
+after every change - "update-grub"
+install grub to kali on dev/sda8  -  ""
+show windows in grub - (from kali) "os.prober" ,if, windows chain efi is exiting - go to /etc/default/grub (file) - & add "GRUB_DISABLE_OS_PROBER=false"
+under the sections  -  and run "update-grub"
+
+-------------
