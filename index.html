@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ar" class="no-js" >
+<head>
+	<meta charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>My Database</title>
+	<meta name="description" content="a database project for the founder alshamy" />
+	<meta name="keywords" content="alshamy database" />
+	<meta name="author" content="mohamed alshamy" />
+	<link rel="shortcut icon" href="eye-logo.ico">
+	<!-- Feather Icons -->
+	<link rel="stylesheet" type="text/css" href="fonts/feather/style.css">
+	<!-- General demo styles & header -->
+	<link rel="stylesheet" type="text/css" href="css/demo.css" />
+	<!-- Component styles -->
+	<link rel="stylesheet" type="text/css" href="css/component.css" />
+	<script src="js/modernizr.custom.js"></script>
+
+	  <!-- partial:index.partial.html -->
+	  <!--<div class="page">
+		  WebGL Ghost Cursor
+	  </div>  -->
+	  
+	  <canvas id="ghost" width="848" height="1040"></canvas>
+	  
+	  
+	  <script type="x-shader/x-fragment" id="vertShader">
+		  precision mediump float;
+	  
+		  varying vec2 vUv;
+		  attribute vec2 a_position;
+	  
+		  void main() {
+			  vUv = .5 * (a_position + 1.);
+			  gl_Position = vec4(a_position, 0.0, 1.0);
+		  }
+	  </script>
+	  
+	  
+	  <script type="x-shader/x-fragment" id="fragShader">
+		  precision mediump float;
+	  
+		  varying vec2 vUv;
+		  uniform float u_time;
+		  uniform float u_ratio;
+		  uniform float u_size;
+		  uniform vec2 u_pointer;
+		  uniform float u_smile;
+		  uniform vec2 u_target_pointer;
+		  uniform vec3 u_main_color;
+		  uniform vec3 u_border_color;
+		  uniform float u_flat_color;
+		  uniform sampler2D u_texture;
+	  
+		  #define TWO_PI 6.28318530718
+		  #define PI 3.14159265358979323846
+	  
+		  vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+		  vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+		  vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+		  float snoise(vec2 v) {
+			  const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+			  vec2 i = floor(v + dot(v, C.yy));
+			  vec2 x0 = v - i + dot(i, C.xx);
+			  vec2 i1;
+			  i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+			  vec4 x12 = x0.xyxy + C.xxzz;
+			  x12.xy -= i1;
+			  i = mod289(i);
+			  vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+			  vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+			  m = m*m;
+			  m = m*m;
+			  vec3 x = 2.0 * fract(p * C.www) - 1.0;
+			  vec3 h = abs(x) - 0.5;
+			  vec3 ox = floor(x + 0.5);
+			  vec3 a0 = x - ox;
+			  m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+			  vec3 g;
+			  g.x = a0.x * x0.x + h.x * x0.y;
+			  g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+			  return 130.0 * dot(m, g);
+		  }
+		  vec2 rotate(vec2 v, float angle) {
+			  float r_sin = sin(angle);
+			  float r_cos = cos(angle);
+			  return vec2(v.x * r_cos - v.y * r_sin, v.x * r_sin + v.y * r_cos);
+		  }
+	  
+		  float eyes(vec2 uv) {
+			  uv.y -= .5;
+			  uv.x *= 1.;
+			  uv.y *= .8;
+			  uv.x = abs(uv.x);
+			  uv.y += u_smile * .3 * pow(uv.x, 1.3);
+			  uv.x -= (.6 + .2 * u_smile);
+	  
+			  float d = clamp(length(uv), 0., 1.);
+			  return 1. - pow(d, .08);
+		  }
+	  
+		  float mouth(vec2 uv) {
+			  uv.y += 1.5;
+	  
+			  uv.x *= (.5 + .5 * abs(1. - u_smile));
+			  uv.y *= (3. - 2. * abs(1. - u_smile));
+			  uv.y -= u_smile * 4. * pow(uv.x, 2.);
+	  
+			  float d = clamp(length(uv), 0., 1.);
+			  return 1. - pow(d, .07);
+		  }
+	  
+		  float face(vec2 uv, float rotation) {
+			  uv = rotate(uv, rotation);
+			  uv /= (.27 * u_size);
+	  
+			  float eyes_shape = 10. * eyes(uv);
+			  float mouth_shape = 20. * mouth(uv);
+	  
+			  float col = 0.;
+			  col = mix(col, 1., eyes_shape);
+			  col = mix(col, 1., mouth_shape);
+	  
+			  return col;
+		  }
+	  
+		  void main() {
+	  
+			  vec2 point = u_pointer;
+			  point.x *= u_ratio;
+	  
+			  vec2 uv = vUv;
+			  uv.x *= u_ratio;
+			  uv -= point;
+	  
+			  float texture = texture2D(u_texture, vec2(vUv.x, 1. - vUv.y)).r;
+			  float shape = texture;
+	  
+			  float noise = snoise(uv * vec2(.7 / u_size, .6 / u_size) + vec2(0., .0015 * u_time));
+			  noise += 1.2;
+			  noise *= 2.1;
+			  noise += smoothstep(-.8, -.2, (uv.y) / u_size);
+	  
+			  float face = face(uv, 5. * (u_target_pointer.x - u_pointer.x));
+			  shape -= face;
+	  
+			  shape *= noise;
+	  
+			  vec3 border = (1. - u_border_color);
+			  border.g += .2 * sin(.005 * u_time);
+			  border *= .5;
+	  
+			  vec3 color = u_main_color;
+			  color -= (1. - u_flat_color) * border * smoothstep(.0, .01, shape);
+	  
+			  shape = u_flat_color * smoothstep(.8, 1., shape) + (1. - u_flat_color) * shape;
+			  color *= shape;
+	  
+			  gl_FragColor = vec4(color, shape);
+		  }
+	  </script>
+	  
+	  <!-- partial -->
+		<script type="module" src="./js/script.js"></script>
+
+    
+
+	<!-- Main container -->
+	<div class="container">
+		<!-- header -->
+		<header class="bp-header cf">
+			<span>Alshamy <span class="bp-icon bp-icon-about" data-content="a database that contain all the informations about the founder mohamed alshamy ." ></span>
+            </span>
+			<!--<h1>database</h1>-->
+			<nav>
+			   <!--<a href="hh" class="bp-icon bp-icon-next" data-info="next Blueprint"><span>Next Blueprint</span></a>-->
+			    <a class="bp-icon bp-icon-about" href="http://www.google.com" data-info="حول المشروع"></a>
+				<a class="bp-icon bp-icon-prev" onclick=closeFullscreen(); data-info="اغلاق الشاشة الكاملة"></a>
+                <a class="bp-icon bp-icon-drop" onclick=openFullscreen(); data-info="وضع الشاشة الكاملة"></a>
+
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Define the display style for the dialog */
+        dialog {
+            width: 150%;
+            height: 150%;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border: none;
+        }
+    </style>
+
+<!-- onclick fullscreen -->
+<script>
+	// عند النقر على الصفحة
+	document.onclick = function() {
+	  openFullscreen();
+	};
+	
+	function openFullscreen() {
+	  if (document.documentElement.requestFullscreen) {
+		document.documentElement.requestFullscreen();
+	  } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
+		document.documentElement.mozRequestFullScreen();
+	  } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+		document.documentElement.webkitRequestFullscreen();
+	  } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
+		document.documentElement.msRequestFullscreen();
+	  }
+	}
+	</script>
+
+<script>
+
+var elem = document.documentElement;
+function openFullscreen() {
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+    }
+}
+
+function closeFullscreen() {
+    if (document.exitFullscreen) {
+        document.exitFullscreen();
+    } else if (document.webkitExitFullscreen) { /* Safari */
+        document.webkitExitFullscreen();
+    } else if (document.msExitFullscreen) { /* IE11 */
+        document.msExitFullscreen();
+    }
+}
+</script>
+			</nav>
+		</header>
+
+		<!-- الاقسام 5 -->
+		<section class="slider">
+			<div class="slide slide--current" data-content="content-1">
+				<div class="slide__mover">
+					<div class="zoomer flex-center">
+						<img class="zoomer__image" src="https://i.ibb.co/kKxcv2S/screen-secrets.png" />
+						<div class="preview">
+							<!--img src="images/screen-files.png" alt="iPhone app preview" />  -->
+							<div class="zoomer__area zoomer__area--size-2"></div>
+						</div>
+					</div>
+				</div>
+				<h2 class="slide__title"><span></span> الملفات</h2>
+			</div>
+			<div class="slide" data-content="content-2">
+				<div class="slide__mover">
+					<div class="zoomer flex-center">
+						<img class="zoomer__image" src="https://i.ibb.co/kKxcv2S/screen-secrets.png" />
+						<div class="preview">
+							<div class="zoomer__area zoomer__area--size-4"></div>
+						</div>
+					</div>
+				</div>
+				<h2 class="slide__title"><span></span> الرقميات</h2>
+			</div>
+			<div class="slide" data-content="content-3">
+				<div class="slide__mover">
+					<div class="zoomer flex-center">
+						<img class="zoomer__image" src="https://i.ibb.co/kKxcv2S/screen-secrets.png" />
+						<div class="preview">
+							<div class="zoomer__area zoomer__area--size-3"></div>
+						</div>
+					</div>
+				</div>
+				<h2 class="slide__title"><span></span> المعلومات</h2>
+			</div>
+			<div class="slide" data-content="content-4">
+				<div class="slide__mover">
+					<div class="zoomer flex-center">
+						<img class="zoomer__image" src="https://i.ibb.co/kKxcv2S/screen-secrets.png" />
+						<div class="preview">
+							<div class="zoomer__area zoomer__area--size-5"></div>
+						</div>
+					</div>
+				</div>
+				<h2 class="slide__title"><span></span> المشكلات</h2>
+			</div>
+			<div class="slide" data-content="content-5">
+				<div class="slide__mover">
+					<div class="zoomer flex-center">
+						<img class="zoomer__image" src="https://i.ibb.co/kKxcv2S/screen-secrets.png" />
+						<div class="preview rounded">
+							<div class="zoomer__area zoomer__area--size-1"></div>
+						</div>
+					</div>
+				</div>
+				<h2 class="slide__title"><span></span> اسرار</h2>
+			</div>
+			<nav class="slider__nav">
+				<button class="button button--nav-prev"><i class="icon icon--arrow-left"></i><span class="text-hidden">Previous</span></button>
+				<button class="button button--zoom"><i class="icon icon--zoom"></i><span class="text-hidden">View</span></button>
+				<button class="button button--nav-next"><i class="icon icon--arrow-right"></i><span class="text-hidden">Next</span></button>
+			</nav>
+		</section>
+
+
+		<!-- التفاصيل -->
+		<section class="content">
+			<div class="content__item" id="content-1"> <!-- ملفات -->
+				<div class="content__item-inner">
+					<h2>الملفات</h2>
+                    <h3>( يشمل جميع الملفات المفردة بمختلف الامتدادات )</h3>
+					<br><br><br><br>
+                    <details>
+                        <summary>جداول الملفات</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="https://drive.google.com/drive/folders/1gA9nOUfOszzIKdfSaaXrHmS6_8TXiuDB?usp=drive_link" position=center>ملفات نصية</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>ملفات صور</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>ملفات الكتب</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>ملفات خاصة</a></p>
+							<p>⦿&emsp;<a href="http://google.com/" position=center>ملفات اصلاحية</a></p>
+							<p>⦿&emsp;<a href="http://google.com/" position=center>مجلدات مضغوطة</a></p>
+                    </details>
+					<br><br>
+				</div>
+			</div>
+			<div class="content__item" id="content-2"><!-- رقميات -->
+				<div class="content__item-inner">
+					<h2>الرقميات</h2>
+                    <h3>( كل تقنية رقمية من برامج و خدمات و روابط و غيرها )</h3>
+                    <br><br><br><br>
+                    <details>
+                        <summary>البرامج</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="database/softwares/_progs/godot/index.html" position=center>godot</a></p>
+                            <p>⦿&emsp;<a href="database/softwares/_progs/blender/index.html" position=center>blender</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>selfish-net</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>gimp</a></p>
+                    </details>
+                        <br><br>
+                    <details>
+                        <summary>الخدمات</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+						<br><br>
+                    <details>
+                        <summary>الادوات</summary>
+                        <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+						<br><br>
+                    <details>
+                        <summary>لغات البرمجة</summary>
+                        <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+						<br><br>
+					<details>
+                        <summary>الروابط</summary>
+                        <br><br>
+                            <p>⦿&emsp;<a href="database/softwares/_links/d-links/index.html" position=center>dark web sites</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>useful sites</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>torrents</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>other</a></p>
+                    </details>
+				</div>
+			</div>
+			<div class="content__item" id="content-3"><!-- معلومات -->
+				<div class="content__item-inner">
+					<h2>المعلومات</h2>
+                    <h3>( معلومات تم تجميعها و تحوي معلومات ضائعة او معلومات هامة و خطيرة)</h3>
+				    <br><br><br><br>
+                    <details>
+                        <summary>شخصيات مؤثرة</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+                        <br><br>
+                    <details>
+                        <summary>علوم محظورة</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+						<br><br>
+					<details>
+                        <summary>الاختراق الالكتروني</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+				</div>
+			</div>
+			<div class="content__item" id="content-4"><!-- مشكلات -->
+				<div class="content__item-inner">
+					<h2>المشكلات</h2>
+					<h3>( خبرة في جميع مختلف المجالات )</h3>
+                    <br><br><br><br>
+                    <details>
+                        <summary>اخطاء الكمبيوتر</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="database/problems/computer/_errors/0x07b/index.html" position=center>0x00007b error</a></p>
+                            <p>⦿&emsp;<a href="database/problems/computer/_errors/0x504/index.html" position=center>0x800004005 errors</a></p>
+                            <p>⦿&emsp;<a href="database/problems/computer/_errors/wscript/index.html" position=center>wscript</a></p>
+                            <!--<p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>-->
+                    </details>
+                        <br><br>
+                    <details>
+                        <summary>مشكلات عامة</summary>
+                                <br><br><!--
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>-->
+                    </details>
+				</div>
+			</div>
+			<div class="content__item" id="content-5"><!-- اسرار -->
+				<div class="content__item-inner">
+					<h2>اسرار</h2>
+					<h3>()</h3>
+					<br><br><br><br>
+                    <details>
+                        <summary>click here</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+                        <br><br>
+                    <details>
+                        <summary>click here</summary>
+                                <br><br>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                            <p>⦿&emsp;<a href="http://google.com/" position=center>hhhh</a></p>
+                    </details>
+				</div>
+			</div>
+			<button class="button button--close"><i class="icon icon--circle-cross"></i><span class="text-hidden">Close content</span></button>
+		</section>
+	</div>
+	<script src="js/classie.js"></script>
+	<script src="js/dynamics.min.js"></script>
+	<script src="js/main.js"></script>
+</body>
+</html>
